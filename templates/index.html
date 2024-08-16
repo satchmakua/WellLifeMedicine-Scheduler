@@ -1,0 +1,40 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Harding's Availability</title>
+</head>
+<body>
+    <h1>Dr. Harding's Availability for Annual Physicals</h1>
+    <button onclick="loadAvailability('current')">Current Month</button>
+    <button onclick="loadAvailability('next')">Next Month</button>
+    <ul id="availability-list"></ul>
+
+    <script>
+        function loadAvailability(month) {
+            fetch(`/availability?month=${month}`)
+                .then(response => response.json())
+                .then(data => {
+                    const list = document.getElementById('availability-list');
+                    list.innerHTML = '';
+                    if (data.dates.length > 0) {
+                        data.dates.forEach(date => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = `Dr. Harding is available on ${date}`;
+                            list.appendChild(listItem);
+                        });
+                    } else {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = 'No availability found.';
+                        list.appendChild(listItem);
+                    }
+                });
+        }
+
+        // Load the next month's availability by default
+        loadAvailability('next');
+    </script>
+</body>
+</html>
